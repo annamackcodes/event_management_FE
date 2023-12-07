@@ -2,10 +2,16 @@ import React, { useState } from "react";
 import { Form, Button, Container, Row, Col } from "react-bootstrap";
 import { BsFillPersonFill, BsLockFill, BsEnvelopeFill } from "react-icons/bs";
 import axios from "../services/api";
-import {  NotificationManager } from "react-notifications";
+import { NotificationManager } from "react-notifications";
 import "react-notifications/lib/notifications.css";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
 
+const StyledForm = styled(Form)`
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 10px;
+`;
 const SignUp = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -28,7 +34,10 @@ const SignUp = () => {
     e.preventDefault();
 
     if (formData.user.password !== formData.user.passwordConfirmation) {
-      NotificationManager.error("Password and Confirm Password do not match.", 'Error');
+      NotificationManager.error(
+        "Password and Confirm Password do not match.",
+        "Error"
+      );
       return;
     }
 
@@ -36,9 +45,9 @@ const SignUp = () => {
       await axios.post("/signup", formData);
       NotificationManager.success(
         "Sign up successful. Redirecting to login page.",
-        "Success"      
+        "Success"
       );
-      navigate('/login');
+      navigate("/login");
     } catch (error) {
       const errorMessages = error.response.data?.status || [];
       const errorMessageList = (
@@ -53,7 +62,7 @@ const SignUp = () => {
           <p>Please try again.</p>
           {errorMessageList}
         </>,
-        'Error'
+        "Error"
       );
     }
   };
@@ -62,7 +71,7 @@ const SignUp = () => {
     <Container className="mt-5">
       <Row className="justify-content-center">
         <Col md={6}>
-          <Form onSubmit={handleSubmit}>
+          <StyledForm onSubmit={handleSubmit}>
             <h2 className="text-center mb-4">Sign Up</h2>
 
             <Form.Group controlId="formName">
@@ -142,7 +151,7 @@ const SignUp = () => {
                 Sign Up
               </Button>
             </div>
-          </Form>
+          </StyledForm>
         </Col>
       </Row>
     </Container>

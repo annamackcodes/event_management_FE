@@ -6,6 +6,13 @@ import { NotificationManager } from "react-notifications";
 import "react-notifications/lib/notifications.css";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import styled from "styled-components";
+
+const StyledForm = styled(Form)`
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 10px;
+`;
 
 const SignIn = () => {
   const navigate = useNavigate();
@@ -52,7 +59,7 @@ const SignIn = () => {
     <Container className="mt-5">
       <Row className="justify-content-center">
         <Col md={6}>
-          <Form onSubmit={handleSubmit}>
+          <StyledForm onSubmit={handleSubmit}>
             <h2 className="text-center mb-4">Sign In</h2>
 
             <Form.Group controlId="formEmail">
@@ -96,7 +103,7 @@ const SignIn = () => {
                 Sign In
               </Button>
             </div>
-          </Form>
+          </StyledForm>
         </Col>
       </Row>
     </Container>

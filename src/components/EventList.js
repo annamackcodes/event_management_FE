@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Table, Row, Col } from 'react-bootstrap';
-import { BsTrash } from 'react-icons/bs';
-import styled from 'styled-components';
-import CreateEvent from './CreateEvent';
+import React, { useState, useEffect } from "react";
+import { Button, Table, Row, Col } from "react-bootstrap";
+import { BsTrash } from "react-icons/bs";
+import styled from "styled-components";
+import CreateEvent from "./CreateEvent";
+import axios from "../services/api";
 
 const EventListContainer = styled.div`
   max-width: 800px;
@@ -15,12 +16,16 @@ const EventList = () => {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    const dummyData = [
-      { id: 1, name: 'Event 1', description: 'Description 1', date: '2023-12-15', location: 'Location 1', organizer: 'Organizer 1' },
-      { id: 2, name: 'Event 2', description: 'Description 2', date: '2023-12-20', location: 'Location 2', organizer: 'Organizer 2' },
-    ];
+    const fetchEvents = async () => {
+      try {
+        const response = await axios.get("/api/events");
+        setEvents(response.data);
+      } catch (error) {
+        console.error("Error fetching events:", error);
+      }
+    };
 
-    setEvents(dummyData);
+    fetchEvents();
   }, []);
 
   const handleCreateEvent = () => {
@@ -31,9 +36,17 @@ const EventList = () => {
     setShowModal(false);
   };
 
-  const handleDelete = (eventId, e) => {
+  const handleDelete = async (eventId, e) => {
     e.stopPropagation();
-    setEvents((prevEvents) => prevEvents.filter((event) => event.id !== eventId));
+
+    try {
+      await axios.delete(`/api/events/${eventId}`);
+      setEvents((prevEvents) =>
+        prevEvents.filter((event) => event.id !== eventId)
+      );
+    } catch (error) {
+      console.error("Error deleting event:", error);
+    }
   };
 
   return (
@@ -48,38 +61,54 @@ const EventList = () => {
 
       <CreateEvent showModal={showModal} handleCloseModal={handleCloseModal} />
 
-      {events.length > 0 ? (
-        <Table striped bordered hover responsive className="mt-4">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Description</th>
-              <th>Date</th>
-              <th>Location</th>
-              <th>Organizer</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {events.map((event) => (
-              <tr key={event.id} style={{ cursor: 'pointer' }} onClick={() => window.location.href = `/events/${event.id}`}>
+      <h2 className="mt-4">My Events:</h2>
+
+      <Table striped bordered hover responsive className="mt-4">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Date</th>
+            <th>Location</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {events.length > 0 ? (
+            events.map((event) => (
+              <tr
+                key={event.id}
+                style={{ cursor: "pointer" }}
+                onClick={() => (window.location.href = `/events/${event.id}`)}
+              >
                 <td>{event.name}</td>
                 <td>{event.description}</td>
-                <td>{event.date}</td>
+                <td>
+                  {new Date(event.date).toLocaleDateString("en-US", {
+                    month: "long",
+                    day: "numeric",
+                    year: "numeric",
+                  })}
+                </td>
                 <td>{event.location}</td>
-                <td>{event.organizer}</td>
                 <td className="text-center">
-                  <Button variant="danger" size="sm" onClick={(e) => handleDelete(event.id, e)}>
+                  <Button
+                    variant="danger"
+                    size="sm"
+                    onClick={(e) => handleDelete(event.id, e)}
+                  >
                     <BsTrash />
                   </Button>
                 </td>
               </tr>
-            ))}
-          </tbody>
-        </Table>
-      ) : (
-        <p className="mt-4">No events available.</p>
-      )}
+            ))
+          ) : (
+            <tr className="mt-4 text-center">
+              <td colSpan="6">No events available</td>
+            </tr>
+          )}
+        </tbody>
+      </Table>
     </EventListContainer>
   );
 };
