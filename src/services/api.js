@@ -6,7 +6,7 @@ const api = axios.create({
 
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
-  if (config.url.includes("/login") || config.url.includes("/signup")) {
+  if (config.url.includes("/login") || config.url.includes("/logout")) {
     localStorage.removeItem("token");
     return config;
   } else if (token) {

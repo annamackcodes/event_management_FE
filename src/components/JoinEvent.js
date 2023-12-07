@@ -1,68 +1,119 @@
-import React, { useState } from 'react';
-import axios from '../services/api';
-import styled from 'styled-components';
+import React, { useState, useEffect } from "react";
+import { Table, Row } from "react-bootstrap";
+import styled from "styled-components";
+import CreateEvent from "./CreateEvent";
+import axios from "../services/api";
+import { BsCalendar } from "react-icons/bs";
+import { AiOutlineEnvironment } from "react-icons/ai";
 
 const JoinEventContainer = styled.div`
   max-width: 800px;
   margin: 0 auto;
-`;
-
-const JoinEventForm = styled.form`
-  background-color: #f8f9fa;
   padding: 20px;
-  border-radius: 8px;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 `;
 
-const FormButton = styled.button`
-  background-color: #0d6efd;
-  color: #fff;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-`;
-
-
-const FormLabel = styled.label`
-  display: block;
-  margin-bottom: 10px;
-`;
-
-const FormInput = styled.input`
-  width: 100%;
-  padding: 10px;
+const EventHeading = styled.h2`
+  font-size: 28px;
+  color: #007bff;
   margin-bottom: 20px;
 `;
 
+const StyledTable = styled(Table)`
+  margin-top: 20px;
+
+  th,
+  td {
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  th {
+    background-color: #007bff;
+    color: #fff;
+  }
+
+  tbody tr {
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: #f0f8ff;
+    }
+  }
+`;
 
 const JoinEvent = () => {
-  const [eventId, setEventId] = useState('');
+  const [events, setEvents] = useState([]);
+  const [showModal, setShowModal] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await axios.post(`/events/${eventId}/join`);
-    } catch (error) {
-      console.error('Error joining event:', error);
-    }
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await axios.get("/api/events/get_events");
+        setEvents(response.data);
+      } catch (error) {
+        console.error("Error fetching events:", error);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
+  const handleCloseModal = () => {
+    setShowModal(false);
   };
 
   return (
     <JoinEventContainer>
-      <h2>Join Event</h2>
-      <JoinEventForm onSubmit={handleSubmit}>
-        <FormLabel>
-          Event ID:
-          <FormInput
-          type="text"
-          value={eventId}
-          onChange={(e) => setEventId(e.target.value)}
-          required
-        />
-      </FormLabel>
-      <FormButton type="submit">Join Event</FormButton>
-    </JoinEventForm>
-  </JoinEventContainer>
+      <CreateEvent showModal={showModal} handleCloseModal={handleCloseModal} />
+
+      <Row className="align-items-center">
+          <EventHeading>New Events to Join</EventHeading>
+      </Row>
+
+      <StyledTable striped bordered hover responsive>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Date</th>
+            <th>Location</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {events.length > 0 ? (
+            events.map((event) => (
+              <tr
+                key={event.id}
+                onClick={() => (window.location.href = `/events/${event.id}`)}
+              >
+                <td>{event.name}</td>
+                <td>{event.description}</td>
+                <td>
+                  <BsCalendar />{" "}
+                  {new Date(event.date).toLocaleDateString("en-US", {
+                    month: "long",
+                    day: "numeric",
+                    year: "numeric",
+                  })}
+                </td>
+                <td>
+                  <AiOutlineEnvironment /> {event.location}
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr className="text-center">
+              <td colSpan="5">No events available</td>
+            </tr>
+          )}
+        </tbody>
+      </StyledTable>
+    </JoinEventContainer>
   );
 };
 

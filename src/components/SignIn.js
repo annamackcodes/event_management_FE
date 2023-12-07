@@ -16,13 +16,13 @@ const StyledForm = styled(Form)`
 
 const SignIn = () => {
   const navigate = useNavigate();
+  const { dispatch } = useAuth();
   const [formData, setFormData] = useState({
     user: {
       email: "",
       password: "",
     },
   });
-  const { dispatch } = useAuth();
 
   const handleChange = (e) => {
     setFormData({
@@ -44,6 +44,7 @@ const SignIn = () => {
         "Login successful. Redirecting to Events page.",
         "Success"
       );
+
       setTimeout(() => {
         navigate("/");
       }, 0);
