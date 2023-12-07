@@ -1,7 +1,9 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-const root = document.getElementById('root');
+import "bootstrap/dist/css/bootstrap.min.css";
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { AuthProvider } from "./context/AuthContext";
+
+const root = document.getElementById("root");
 
 const createRoot = (element) => {
   if (root !== null) {
@@ -10,12 +12,19 @@ const createRoot = (element) => {
 };
 
 const render = () => {
-  const App = require('./App').default;
-  createRoot(<React.StrictMode><App /></React.StrictMode>);
+  const App = require("./App").default;
+  createRoot(
+    <React.StrictMode>
+      {" "}
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </React.StrictMode>
+  );
 };
 
 if (module.hot) {
-  module.hot.accept('./App', render);
+  module.hot.accept("./App", render);
 }
 
 render();

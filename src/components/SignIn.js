@@ -1,19 +1,51 @@
-import React, { useState } from 'react';
-import { Form, Button, Container, Row, Col } from 'react-bootstrap';
-import { BsFillPersonFill, BsLockFill } from 'react-icons/bs';
+import React, { useState } from "react";
+import { Form, Button, Container, Row, Col } from "react-bootstrap";
+import { BsFillPersonFill, BsLockFill } from "react-icons/bs";
+import axios from "../services/api";
+import { NotificationManager } from "react-notifications";
+import "react-notifications/lib/notifications.css";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const SignIn = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    user: {
+      email: "",
+      password: "",
+    },
   });
+  const { dispatch } = useAuth();
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData({
+      ...formData,
+      user: { ...formData.user, [e.target.name]: e.target.value },
+    });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    try {
+      const response = await axios.post("/login", formData);
+      const token = response.headers["authorization"];
+
+      dispatch({ type: "SIGN_IN", payload: { token } });
+
+      NotificationManager.success(
+        "Login successful. Redirecting to Events page.",
+        "Success"
+      );
+      setTimeout(() => {
+        navigate("/");
+      }, 0);
+    } catch (error) {
+      NotificationManager.error(
+        "Login unsuccessful. \n Please try again.",
+        "Error"
+      );
+    }
   };
 
   return (
@@ -58,7 +90,7 @@ const SignIn = () => {
                 />
               </div>
             </Form.Group>
-            <br></br>
+            <br />
             <div className="text-center">
               <Button variant="primary" type="submit">
                 Sign In
