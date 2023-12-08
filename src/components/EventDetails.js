@@ -7,16 +7,17 @@ import {
   faMapMarkerAlt,
   faAlignLeft,
 } from "@fortawesome/free-solid-svg-icons";
+import { Container } from "react-bootstrap";
+import { NotificationManager } from "react-notifications";
 
 const EventDetailsContainer = styled.div`
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 30px;
   background: linear-gradient(to right, #3494e6, #ec6ead);
-  border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   color: #fff;
   text-align: center;
+  padding: 40px 0px;
+  width: 100%;
+  display: flex;
 `;
 
 const EventTitle = styled.h2`
@@ -51,10 +52,10 @@ const EventDetails = () => {
 
     const fetchEventDetails = async () => {
       try {
-        const response = await axios.get(`/api/events/${eventId}`);
+        const response = await axios.get(`/api/v1/events/${eventId}`);
         setEvent(response.data);
       } catch (error) {
-        console.error("Error fetching event details:", error);
+        NotificationManager.error("Something went wrong!", "Error");
       } finally {
         setLoading(false);
       }
@@ -68,7 +69,7 @@ const EventDetails = () => {
       {loading ? (
         <p>Loading...</p>
       ) : event ? (
-        <>
+        <Container className="my-auto">
           <EventTitle>{event.name}</EventTitle>
           <EventDescription>
             <Icon>
@@ -92,7 +93,7 @@ const EventDetails = () => {
             </Icon>
             {event.location}
           </EventDetail>
-        </>
+        </Container>
       ) : (
         <p>Event not found</p>
       )}

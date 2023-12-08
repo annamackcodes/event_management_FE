@@ -1,7 +1,8 @@
-import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
+import { BrowserRouter as Router } from "react-router-dom";
 import ReactDOM from "react-dom/client";
-import { AuthProvider } from "./context/AuthContext";
+import { EventProvider } from "./context/EventContext";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const root = document.getElementById("root");
 
@@ -16,9 +17,11 @@ const render = () => {
   createRoot(
     <React.StrictMode>
       {" "}
-      <AuthProvider>
-        <App />
-      </AuthProvider>
+      <EventProvider>
+        <Router>
+          <App />
+        </Router>
+      </EventProvider>
     </React.StrictMode>
   );
 };

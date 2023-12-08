@@ -1,75 +1,68 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Route, Routes, Link, useNavigate } from "react-router-dom";
 import { Navbar, Container, Nav } from "react-bootstrap";
-import EventList from "./components/EventList";
 import EventDetails from "./components/EventDetails";
-import CreateEvent from "./components/CreateEvent";
-import JoinEvent from "./components/JoinEvent";
 import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
 import { NotificationContainer } from "react-notifications";
-import { useAuth } from "./context/AuthContext";
+import { useEvent } from "./context/EventContext";
 import SignOut from "./components/SignOut";
-import JoinedEvents from "./components/JoinedEvents";
+import Footer from "./components/Footer";
+import Home from "./layouts/Home";
+import "./App.css";
+
 const App = () => {
-  const {
-    state: { isAuthenticated },
-    dispatch,
-  } = useAuth();
+  const { state, dispatch } = useEvent();
+  const { isAuthenticated } = state;
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isAuthenticated && isAuthenticated !== undefined && window.location.pathname !== "/signup") {
+      navigate('/login');
+    }
+  }, [isAuthenticated, navigate]);
 
   return (
-    <Router>
+    <>
+      <Navbar bg="dark" variant="dark" expand="lg" fixed="top">
+        <Container>
+          <Navbar.Brand as={Link} to="/">
+            <span style={{ color: "#007bff" }}>Event</span> App
+          </Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="ms-auto">
+              {isAuthenticated ? (
+                <>
+                  <SignOut dispatch={dispatch} />
+                </>
+              ) : (
+                <>
+                  <Nav.Link as={Link} to="/login" className="nav-link">
+                    Sign In
+                  </Nav.Link>
+                  <Nav.Link as={Link} to="/signup" className="nav-link">
+                    Sign Up
+                  </Nav.Link>
+                </>
+              )}
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
 
-    <Navbar bg="dark" variant="dark" expand="lg">
-      <Container>
-        <Navbar.Brand as={Link} to="/">
-          <span style={{ color: "#007bff" }}>Event</span> App
-        </Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="ml-auto">
-            {isAuthenticated ? (
-              <>
-                <Nav.Link as={Link} to="/" className="nav-link">
-                  Event List
-                </Nav.Link>
-                <Nav.Link as={Link} to="/get_events" className="nav-link">
-                  New Events to Join
-                </Nav.Link>                
-                <Nav.Link as={Link} to="/joined_events" className="nav-link">
-                  Joined Events
-                </Nav.Link>
-                <SignOut dispatch={dispatch} />
-              </>
-            ) : (
-              <>
-                <Nav.Link as={Link} to="/login" className="nav-link">
-                  Sign In
-                </Nav.Link>
-                <Nav.Link as={Link} to="/signup" className="nav-link">
-                  Sign Up
-                </Nav.Link>
-              </>
-            )}
-          </Nav>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
-
-      <Container className="mt-3">
+      <div className="mt-5 pt-2 bg-light main-content">
         <Routes>
-          <Route path="/" element={<EventList />} />
+          <Route path="/" element={<Home />} />
           <Route path="/events/:id" element={<EventDetails />} />
-          <Route path="/create" element={<CreateEvent />} />
-          <Route path="/get_events" element={<JoinEvent />} />
-          <Route path="/joined_events" element={<JoinedEvents />} />
           <Route path="/login" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
         </Routes>
-      </Container>
-
+      </div>
       <NotificationContainer />
-    </Router>
+      <Footer />
+    </>
   );
 };
 

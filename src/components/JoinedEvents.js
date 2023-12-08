@@ -1,119 +1,47 @@
-import React, { useState, useEffect } from "react";
-import {Table, Row } from "react-bootstrap";
-import styled from "styled-components";
-import CreateEvent from "./CreateEvent";
+import React, { useEffect, useState } from "react";
+import { Row, Container } from "react-bootstrap";
 import axios from "../services/api";
-import { AiOutlineEnvironment } from "react-icons/ai";
-
-const JoinedEventsContainer = styled.div`
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #f8f9fa;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-`;
-
-const EventHeading = styled.h2`
-  font-size: 28px;
-  color: #007bff;
-  margin-bottom: 20px;
-`;
-
-const StyledTable = styled(Table)`
-  margin-top: 20px;
-
-  th,
-  td {
-    text-align: center;
-    vertical-align: middle;
-  }
-
-  th {
-    background-color: #007bff;
-    color: #fff;
-  }
-
-  tbody tr {
-    cursor: pointer;
-    transition: background-color 0.3s;
-
-    &:hover {
-      background-color: #f0f8ff;
-    }
-  }
-
-  .delete-button {
-    background-color: #dc3545;
-    border-color: #dc3545;
-  }
-
-  .delete-button:hover {
-    background-color: #c82333;
-    border-color: #c82333;
-  }
-`;
+import EventCard from "./EventCard";
+import { EventHeading } from "./EventHeading";
+import { useEvent } from "../context/EventContext";
+import { NotificationManager } from "react-notifications";
 
 const JoinedEvents = () => {
+  const { state: { joinedEvents }, dispatch } = useEvent();
   const [events, setEvents] = useState([]);
-  const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    if (joinedEvents) setEvents(joinedEvents);
+  }, [joinedEvents]);
 
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const response = await axios.get("/api/events/joined_events");
-        setEvents(response.data);
+        const response = await axios.get("/api/v1/events/joined_events");
+        dispatch({ type: "JOINED_EVENTS", payload: response.data });
       } catch (error) {
-        console.error("Error fetching events:", error);
+        NotificationManager.error("Something went wrong!", "Error");
       }
     };
 
     fetchEvents();
-  }, []);
-
-  const handleCloseModal = () => {
-    setShowModal(false);
-  };
+  }, [dispatch]);
 
   return (
-    <JoinedEventsContainer>
-      <CreateEvent showModal={showModal} handleCloseModal={handleCloseModal} />
-
-      <Row className="align-items-center">
-        <EventHeading>Joined Events</EventHeading>
-      </Row>
-
-      <StyledTable striped bordered hover responsive>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Date</th>
-            <th>Location</th>
-          </tr>
-        </thead>
-        <tbody>
-          {events.length > 0 ? (
+    <Container className="joined-events-container py-5">
+      <EventHeading>Joined Events</EventHeading>
+      <Row>
+        {
+          events.length > 0 ? (
             events.map((event) => (
-              <tr
-                key={event.id}
-                onClick={() => (window.location.href = `/events/${event.id}`)}
-              >
-                <td>{event.name}</td>
-                <td>{event.description}</td>
-                <td>
-                  <AiOutlineEnvironment /> {event.location}
-                </td>
-              </tr>
+              <EventCard key={event.id} event={event} isJoined={true} actionType="JOINED_EVENTS" />
             ))
           ) : (
-            <tr className="text-center">
-              <td colSpan="5">No events available</td>
-            </tr>
-          )}
-        </tbody>
-      </StyledTable>
-    </JoinedEventsContainer>
+            <h4 className="text-center mt-4">You have not joined any event yet.</h4>
+          )
+        }
+      </Row>
+    </Container>
   );
 };
 

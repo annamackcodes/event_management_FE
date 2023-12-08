@@ -5,7 +5,7 @@ import axios from "../services/api";
 import { NotificationManager } from "react-notifications";
 import "react-notifications/lib/notifications.css";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useEvent } from "../context/EventContext";
 import styled from "styled-components";
 
 const StyledForm = styled(Form)`
@@ -16,7 +16,7 @@ const StyledForm = styled(Form)`
 
 const SignIn = () => {
   const navigate = useNavigate();
-  const { dispatch } = useAuth();
+  const { dispatch } = useEvent();
   const [formData, setFormData] = useState({
     user: {
       email: "",
@@ -57,7 +57,7 @@ const SignIn = () => {
   };
 
   return (
-    <Container className="mt-5">
+    <Container className="my-5">
       <Row className="justify-content-center">
         <Col md={6}>
           <StyledForm onSubmit={handleSubmit}>

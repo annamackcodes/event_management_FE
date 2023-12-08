@@ -1,90 +1,170 @@
-import React from 'react';
-import { Row, Col, ListGroup, Form, Button } from 'react-bootstrap';
+import React from "react";
+import { Container } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEnvelope, faLocationDot } from "@fortawesome/free-solid-svg-icons";
+import {
+  faInstagram,
+  faFacebook,
+  faYoutube,
+  faTiktok,
+} from "@fortawesome/free-brands-svg-icons";
 
 const Footer = () => {
   return (
-    <div className="footer">
-      <div className="container">
-        <Row>
-          <Column colClass="col-lg-4 col-sm-4 col-xs-12">
-            <FooterSection title="Services">
-              <FooterLink href="#">Lorem Ipsum</FooterLink>
-              <FooterLink href="#">Simply dummy text</FooterLink>
-              <FooterLink href="#">The printing and typesetting </FooterLink>
-              <FooterLink href="#">Standard dummy text</FooterLink>
-              <FooterLink href="#">Type specimen book</FooterLink>
-            </FooterSection>
-          </Column>
-
-          <Column colClass="col-md-4 col-sm-4 col-xs-12">
-            <FooterSection title="Page Link">
-              <FooterLink href="#">Lorem Ipsum</FooterLink>
-              <FooterLink href="#">Simply dummy text</FooterLink>
-              <FooterLink href="#">The printing and typesetting </FooterLink>
-              <FooterLink href="#">Standard dummy text</FooterLink>
-              <FooterLink href="#">Type specimen book</FooterLink>
-            </FooterSection>
-          </Column>
-
-          <Column colClass="col-md-4 col-sm-4 col-xs-12">
-            <FooterSection title="Subscribe today">
-              <div className="signup_form">
-                <SubscribeForm />
+    <div className="d-flex flex-column h-100 position-relative footer">
+      <footer
+        className="w-100 pt-4 flex-shrink-0 pb-0"
+        style={{ background: "#000F0D" }}
+      >
+        <div className="container pt-4 pb-0">
+          <Container>
+            <div className="row gy-4 gx-5">
+              <div className="col-lg-4 col-md-6">
+                <h5 className="h1 text-white">Events</h5>
+                <p className="roboto-regular-14px-information text-white mt-5">
+                  Maecenas consectetur in a a imperdiet nunc cras ipsum.
+                  Consequat sed eu sed pharetra velit.
+                </p>
               </div>
-            </FooterSection>
-            <div className="social_profile">
-              <SocialIcons />
+              <div className="col-lg-4 col-md-6 links-container">
+                <ul className="ps-0">
+                  <li className="col-heading">
+                    <h3> Resources </h3>
+                  </li>
+                  <li className="list-unstyled">
+                    <a
+                      href="/"
+                      className="roboto-regular-14px-information text-white"
+                    >
+                      For him
+                    </a>
+                  </li>
+                  <li className="list-unstyled">
+                    <a
+                      href="/"
+                      className="roboto-regular-14px-information text-white"
+                    >
+                      For her
+                    </a>
+                  </li>
+                  <li className="list-unstyled">
+                    <a
+                      href="/"
+                      className="roboto-regular-14px-information text-white"
+                    >
+                      Event types
+                    </a>
+                  </li>
+                  <li className="list-unstyled">
+                    <a
+                      href="/"
+                      className="roboto-regular-14px-information text-white"
+                    >
+                      Contact
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              <div className="col-lg-4 col-md-6 links-container">
+                <ul className="ps-0">
+                  <li className="col-heading">
+                    <h3> Contact </h3>
+                  </li>
+                  <div className="d-flex align-items-center">
+                    <FontAwesomeIcon
+                      icon={faEnvelope}
+                      style={{ color: "#A0C49D", marginRight: "14px" }}
+                    />
+                    <li
+                      className="p-0 m-0 text-decoration-none list-unstyled"
+                    >
+                      <a
+                        href="/"
+                        className="roboto-regular-14px-information text-white"
+                      >
+                        example@events.com
+                      </a>
+                    </li>
+                  </div>
+                  <div className="d-flex">
+                    <div className="d-flex align-items-center">
+                      <FontAwesomeIcon
+                        icon={faLocationDot}
+                        style={{
+                          color: "#A0C49D",
+                          marginRight: "14px",
+                          marginLeft: "2px",
+                        }}
+                      />
+                    </div>
+                    <div className="d-flex align-items-center">
+                      <li
+                        className="p-0 m-0 mt-3 text-decoration-none list-unstyled"
+                      >
+                        <a
+                          href="/"
+                          className="roboto-regular-14px-information text-white text-right"
+                        >
+                          A cursus turpis eu a pellentesque. Nulla neque donec
+                          mauris at.
+                        </a>
+                      </li>
+                    </div>
+                  </div>
+                  <li>
+                    <div
+                      className="col item social d-flex align-items-center justify-content-between mt-5"
+                      style={{ width: "204px" }}
+                    >
+                      <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer">
+                        <FontAwesomeIcon
+                          icon={faFacebook}
+                          className="text-white"
+                          size="2xl"
+                        />
+                      </a>
+                      <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer">
+                        <FontAwesomeIcon
+                          icon={faInstagram}
+                          className="text-white"
+                          size="2xl"
+                        />
+                      </a>
+                      <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer">
+                        <FontAwesomeIcon
+                          icon={faYoutube}
+                          className="text-white"
+                          size="2xl"
+                        />
+                      </a>
+                      <a href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer">
+                        <FontAwesomeIcon
+                          icon={faTiktok}
+                          className="text-white"
+                          size="2xl"
+                        />
+                      </a>
+                    </div>
+                  </li>
+                </ul>
+              </div>
             </div>
-          </Column>
-        </Row>
-
-        <Row>
-          <Column colClass="col-lg-12 col-sm-12 col-xs-12">
-            <CopyrightNotice />
-          </Column>
-        </Row>
-      </div>
+            <div
+              className="d-flex align-items-center justify-content-center p-4 mt-3"
+              style={{ borderTop: "1px solid #ffffff1a" }}
+            >
+              <span
+                className="copyright roboto-regular-14px-information text-white"
+                style={{ opacity: "0.6" }}
+              >
+                Events © 2023 - All Right Are Reserved
+              </span>
+            </div>
+          </Container>
+        </div>
+      </footer>
     </div>
   );
-};
-
-const Column = ({ colClass, children }) => (
-  <Col className={colClass}>{children}</Col>
-);
-
-const FooterSection = ({ title, children }) => (
-  <ListGroup className={`single_footer ${title.toLowerCase().replace(' ', '_')}`}>
-    <ListGroup.Item as="h4">{title}</ListGroup.Item>
-    <ListGroup.Item>
-      <ul>{children}</ul>
-    </ListGroup.Item>
-  </ListGroup>
-);
-
-const FooterLink = ({ href, children }) => (
-  <li><a href={href}>{children}</a></li>
-);
-
-const SubscribeForm = () => (
-  <Form className="subscribe">
-    <Form.Control type="text" placeholder="Enter Email Address" className="subscribe__input" />
-    <Button type="button" className="subscribe__btn">
-      <i className="fas fa-paper-plane"></i>
-    </Button>
-  </Form>
-);
-
-const SocialIcons = () => (
-  <ul>
-    <li><a href="#"><i className="fab fa-facebook-f"></i></a></li>
-    <li><a href="#"><i className="fab fa-twitter"></i></a></li>
-    <li><a href="#"><i className="fab fa-google-plus-g"></i></a></li>
-    <li><a href="#"><i className="fab fa-instagram"></i></a></li>
-  </ul>
-);
-
-const CopyrightNotice = () => (
-  <p className="copyright">Copyright © 2023 <a href="#">Akdesign</a>.</p>
-);
+}
 
 export default Footer;
